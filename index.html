@@ -1,0 +1,67 @@
+<!doctype html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel = "icon" type = "image/png" href="https://login.jupitered.com/media/icon_jupiter_32.png">
+        <title>Jupiter</title>
+
+        <!-- Load external CSS styles -->
+        <link rel="stylesheet" href="clicker.css">
+
+    </head>
+
+    <body>
+
+        <h1>random clicker game idk</h1>
+        <div id="outer">
+            <div class="inner">
+                <l style="margin-top:13px">Upgrades</l><br>
+                <div style="background-color:white; border-radius:10px">
+                    <ups id = "ups">0</ups>
+                </div>
+                <text id = "upsVal">Value per Upgrade: $1</text><br>
+                <text id = "totalUpsVal">Total value of Upgrades: $1</text>
+            </div>
+            <div>
+                <div style="background-color:rgb(200,255,200); border-radius:10px">
+                    <m id = "money" title="$1 per click">$0</m><br>
+                </div>
+                <button id = "daButton">da button™</button>
+                <button id = "upsButton" title="cost: $100">buy Upgrade</button>  
+            </div>
+            <div class="inner">
+                <l id = "tier">Tier: 1</l>
+                <div id = "xpBar" style="background-color:rgb(3,165,252); border-radius:10px">
+                    <xp id = "xp">0/10</xp><br>
+                </div>
+                <div id = "tierInfo">
+                    <button id = "tierUp" class="reset">Tier Up!</button>
+                    <text>Tier Up to:</text><br> 
+                    <text id = "tierBenefits"> - Unlock Upgrade Points<br> - Double base click value</text><br><br>
+                    <text>Performing a Tier Up will reset your money and upgrades.</text>
+                </div> 
+            </div>
+        </div>
+        <br>
+        <div id="outer2">
+            <div id = "upPointsInfo" style="background-color:white; border-radius:10px">
+                <l>Upgrade Points</l>
+                <button id = "convert" class="reset">Convert!</button>
+                <text>Convert your Upgrades into Upgrade Points, which can be used to enhance Upgrades. Converting Upgrades into Upgrade Points will reset your Money, Upgrades, and Tier XP.</text><br><br>
+                <text id = "upPoints">You have 0/100 Upgrade Points</text>
+            </div>    
+        </div>
+        
+        
+        <!--<hr style="height:2px; border-radius:10px; background-color:gray"> -->
+
+        
+        
+        
+        <!-- Load external JavaScript -->
+        <script src="clicker.js"></script>
+        
+    </body>
+
+</html>
