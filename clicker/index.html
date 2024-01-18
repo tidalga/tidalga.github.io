@@ -31,8 +31,9 @@
                 <button id = "upsButton" title="cost: $100">buy Upgrade</button>  
             </div>
             <div class="inner">
-                <l id = "tier">Tier: 1</l>
-                <div id = "xpBar" style="background-color:rgb(3,165,252); border-radius:10px">
+                <l id = "tier">Tier: 1</l><br>
+                <progress value = "1" max = "10" id = "xpBar">asd</progress><br>
+                <div>
                     <xp id = "xp">0/10</xp><br>
                 </div>
                 <div id = "tierInfo">
@@ -50,12 +51,13 @@
                 <button id = "convert" class="reset">Convert!</button>
                 <text>Convert your Upgrades into Upgrade Points, which can be used to enhance Upgrades. Converting Upgrades into Upgrade Points will reset your Money, Upgrades, and Tier XP.</text><br><br>
                 <text id = "upPoints">You have 0/100 Upgrade Points</text>
-            </div>    
+            </div>
+            <div id = "sDollarsInfo" style="background-color:rgb(214,214,214); border-radius:10px">
+                <l>Silver Dollars</l><br>
+                <text>Every time you click <b>da button™</b>, there is a 1% chance to obtain 1 Silver Dollar</text><br><br>
+                <text id = "sDollars">You have 0 Silver Dollars</text>
+            </div>       
         </div>
-        
-        
-        <!--<hr style="height:2px; border-radius:10px; background-color:gray"> -->
-
         
         
         
