@@ -44,6 +44,13 @@ xp {
     font-size:20px;
 }
 
+progress {
+    accent-color: rgb(3,165,252);
+    border-radius: 10px;
+    height: 45px;
+    width: 100%
+}
+
 #daButton {
     font-size: xx-large;
     font-family: "Comic Sans MS", "Chalkboard SE";
