@@ -1,4 +1,3 @@
-console.log("Hello World!");
 var money = 0;
 var sDollars = 0;
 var ups = 0;
@@ -10,6 +9,7 @@ var tier = 1;
 var tierReq = 10;
 var totalUps = 0;
 
+var upsOption = "Max";
 var testing = false;
 if (localStorage.getItem("clicker_money") != null){
     money = Number(localStorage.getItem("clicker_money"));
@@ -90,6 +90,7 @@ var convertBElem = document.getElementById("convert");
 var upPointsElem = document.getElementById("upPoints");
 var sDollarsElem = document.getElementById("sDollars");
 var sDollarsInfoElem = document.getElementById("sDollarsInfo")
+const uOps = document.getElementsByClassName("uOps");
 
 tierInfoElem.hidden = true;
 upPointsInfoElem.hidden = true;
@@ -134,7 +135,12 @@ function refresh(){
     upsElem.title = "you have " + ups + " Upgrades";
     upsValElem.innerHTML = "Value per Upgrade: $" + suffix(1 * (1 + upPoints/10));
     totalUpsValElem.innerHTML = "Total value of Upgrades: $" + suffix(ups * (1 + upPoints/10));
-    upsBElem.innerHTML = "buy upgrade ($" + suffix(upPrice) + ")";
+    if(upsOption == "Max"){
+    	upsBElem.innerHTML = "buy " + maxUps() + " upgrades ($" + suffix(multiPrice(maxUps())) + ")";
+    }
+    else{
+    	upsBElem.innerHTML = "buy " + upsOption + " upgrades ($" + suffix(multiPrice(upsOption)) + ")";
+    }
     upsBElem.title = "cost: $" + Math.ceil(upPrice);
     tierElem.innerHTML = "Tier: " + tier;
     if(tier >= 3){
@@ -181,7 +187,7 @@ function save(){
     }
 }
 
-function setMPC(moners){
+function setUps(moners){
     testing = true;
     ups = moners;
 }
@@ -250,16 +256,51 @@ function click(){
     refresh();
 }
 
+function setUpsOption(option){
+	upsOption = option;
+    refresh();
+}
+
 function upgrade(){
-    if (money >= upPrice){
-        money -= upPrice;
-        ups += 1;
-        xp += 1;
-        totalUps += 1;
-        upPrice *= 1.1;
-        refresh();
-        save();
+	if (upsOption == "Max"){
+    	if (money >= multiPrice(maxUps())){
+        	let newUps = maxUps();
+            money -= multiPrice(newUps);
+            ups += newUps;
+            xp += newUps;
+            totalUps += newUps;
+            upPrice *= 1.1**newUps;
+            refresh();
+            save();
+        }
     }
+    else{
+    	if (money >= multiPrice(upsOption)){
+            money -= multiPrice(upsOption);
+            ups += upsOption;
+            xp += upsOption;
+            totalUps += upsOption;
+            upPrice *= 1.1**upsOption;
+            refresh();
+            save();
+        }
+    } 
+}
+
+function multiPrice(ups){
+	let sum = 0;
+    for(let i = 0; i <= ups - 1; i++){
+    	sum += upPrice * 1.1**i;
+    }
+    return sum;
+}
+
+function maxUps(){
+    let ups = 1;
+    while(money >= multiPrice(ups+1)){
+    	ups++;
+    }
+    return ups;
 }
 
 function tierUp(){
@@ -302,6 +343,10 @@ document.getElementById("daButton").onclick = click;
 upsBElem.onclick = upgrade;
 tierBElem.onclick = tierUp;
 convertBElem.onclick = convert;
+uOps[0].onclick = function(){setUpsOption(1)};
+uOps[1].onclick = function(){setUpsOption(5)};
+uOps[2].onclick = function(){setUpsOption(10)};
+uOps[3].onclick = function(){setUpsOption("Max")};
 
 /*
 update log:
@@ -310,6 +355,7 @@ update log:
         1% chance of earning per click, used to buy in shop
     more quality of life changes
         tier progress bar now uses the html "progress" tag (basically it moves now)
+        multi upgrade options 5, 10, and Max (unlock with silver dollars)
 
 1/15/24 - upgrade tiers (no way, an actual gameplay update)
     added upgrade tiers
