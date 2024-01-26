@@ -41,17 +41,17 @@ ups {
 xp {
     font-family: "Monaco";
     font-weight: normal;
-    font-size:20px;
+    font-size: 20px;
 }
 
 progress {
-    accent-color: rgb(3,165,252);
-    border-radius: 10px;
+    accent-color: rgb(3, 165, 252);
     height: 45px;
-    width: 100%
+    width: 100%;
 }
 
 #daButton {
+    color: black;
     font-size: xx-large;
     font-family: "Comic Sans MS", "Chalkboard SE";
     background-color:rgb(100, 255, 100);
@@ -61,6 +61,10 @@ progress {
     margin: auto;
     height: 200px;
     width: 100%;
+}
+
+#daButton:hover {
+    filter: brightness(90%);
 }
 
 #money{
@@ -79,6 +83,12 @@ progress {
     grid-gap: 10px
 }
 
+#uOpsDiv {
+    display: grid;
+    grid-template-columns: 0.5fr 0.5fr 0.5fr 0.5fr 6fr;
+    grid-gap: 0px;
+}
+
 .inner{
     margin-top: 13px;
 }
@@ -86,7 +96,7 @@ progress {
 #upsInner{
     display: grid;
     grid-template-columns: 3fr 1fr;
-    grid-gap: 5px
+    grid-gap: 5px;
 }
 
 #upsButton {
@@ -100,6 +110,9 @@ progress {
     margin-top: 10px;
     width: 100%;
 }
+#upsButton:hover {
+    filter: brightness(90%);
+}
 
 .reset{
     font-size: x-large;
@@ -109,4 +122,29 @@ progress {
     border-width: 5px;
     margin: auto;
     width: 100%;
+}
+.reset:hover {
+    filter: brightness(80%);
+}
+
+.uOps {
+    color: black;
+    background-color: transparent;
+    border-color: transparent;
+}
+.uOps:hover {
+    color: blue;
+}
+
+.tTip .tTipText{
+    background-color: black;
+    width: 120px;
+    color: black;
+    position: absolute;
+    visibility: hidden;
+    z-index: 1;
+}
+
+.tTip:hover .tTipText{
+    visibility: visible;
 }
