@@ -2,25 +2,28 @@ var stone = 0;
 var dirt = 0;
 
 var oreHP = 5;
-var currOre = "stone";
+var currOre = 1;
 var oreList = {
-	dirt: {
-    	count: 0,
+	1: {
+    	name: "dirt",
+        count: 0,
        	maxHP: 3,
         color: "#8B4513",
     },
-    stone: {
+    2: {
+        name: "stone",
     	count: 0,
         maxHP: 5,
         color: "gray",
     }
 }; 
 
-var button = document.getElementById("clicker");
 var currOreD = document.getElementById("currOre");
 var oreHPD = document.getElementById("oreHPD");
 var stoneCt = document.getElementById("stoneCt");
 var dirtCt = document.getElementById("dirtCt");
+var inSaveBox = document.getElementById("inSaveBox");
+var inSaveBtn = document.getElementById("inSaveBtn");
 var ore = document.getElementById("ore");
 var oreC = ore.getContext("2d");
 
@@ -40,40 +43,79 @@ function mine(){
     	oreList[currOre].count++;
         generate();
     }
- 	refresh();
+ 	quickRef();
 }
 
 function generate(){
 	let val = rng(1,5);
     if(val <= 2){
-    	currOre = "stone";
-        updateOre(currOre);
-        
+        updateOre(1);
     }
     else{
-    	currOre = "dirt";
-        updateOre(currOre);
+        updateOre(2);
     }
     refresh();
 }
 
 function updateOre(o){
+    currOre = o;
 	oreHP = oreList[o].maxHP;
     oreC.fillStyle = oreList[o].color;
 	oreC.fillRect(0,0,ore.width,ore.height);
 }
 
-function refresh(){
-	currOreD.innerHTML = currOre;
-	oreHPD.innerHTML = oreHP + "/" + oreList[currOre].maxHP;
-    stoneCt.innerHTML = "Stone: " + oreList.stone.count;
-    dirtCt.innerHTML = "Dirt: " + oreList.dirt.count;
+function importSave(){
+    for(i = 1; i <= Object.keys(oreList).length; i++){
+        if(localStorage.getItem(oreList[i].name) != null){
+            console.log("ppls print");
+            oreList[i].count = localStorage.getItem(oreList[i].name);
+        }
+    }
 }
 
-button.onclick = mine;
+function save(){
+    console.log("pls print WWW");
+    for(i = 1; i <= Object.keys(oreList).length; i++){
+        localStorage.setItem(oreList[i].name,oreList[i].count);
+    }
+}
+
+function inputSave(){
+    inSaveBox = document.getElementById("inSaveBox");
+    const save = inSaveBox.value.split(",");
+    for(i = 1; i <= Object.keys(oreList).length; i++){
+        oreList[i].count = save[i-1];
+    }
+    refresh();
+}
+
+function quickRef(){
+    oreHPD.innerHTML = oreHP + "/" + oreList[currOre].maxHP;
+}
+
+function refresh(){
+    quickRef();
+	currOreD.innerHTML = oreList[currOre].name;
+    let x;
+    for(i = 1; i <= Object.keys(oreList).length; i++){
+        x = oreList[i].name;
+        document.getElementById(x + "Ct") = x + ": " + oreList[i].count;
+    }
+    save();
+}
+
+ore.onclick = mine;
+importSave();
+//document.getElementById("inSaveBtn").onclick = inputSave;
+
 
 /*
 Update Log:
+4/4/2025 - Backend upgrade
+    Game saves now + text box to input save data (separate data with commas)
+    Rewrote how ore data is accessed to be easily expandable
+    Added some CSS (still very in the works)
+
 3/26/2025 - Ok so basically I made this game
 	You can mine ores!!! (you only got dirt and stone so far)
 	Also don't mind the css (it's super bare bones dw)

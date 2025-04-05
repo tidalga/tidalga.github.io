@@ -6,12 +6,15 @@
 
 <body>
     <h1>random mining game idk</h1>
-    <h3 id="currOre">Stone</h3>
-    <h3 id="oreHPD">5/5</h3>
+    <div id="oreTopDiv">
+        <h3 id="currOre">Stone</h3>
+        <h3 id="oreHPD">5/5</h3>
+    </div>
     <canvas id="ore"></canvas>
-    <button id="clicker">Mine!</button>
-    <h3 id="stoneCt">Stone: 0</h3>
     <h3 id="dirtCt">Dirt: 0</h3>
+    <h3 id="stoneCt">Stone: 0</h3>
     <script src="miner.js"></script>
+    <input type="text" id="inSaveBox" value = "0">
+    <button id="inSaveBtn">Enter</button>
 </body>
 </html>
