@@ -64,17 +64,15 @@ function updateOre(o){
 	oreC.fillRect(0,0,ore.width,ore.height);
 }
 
-function importSave(){
+function loadSave(){
     for(i = 1; i <= Object.keys(oreList).length; i++){
         if(localStorage.getItem(oreList[i].name) != null){
-            console.log("ppls print");
             oreList[i].count = localStorage.getItem(oreList[i].name);
         }
     }
 }
 
 function save(){
-    console.log("pls print WWW");
     for(i = 1; i <= Object.keys(oreList).length; i++){
         localStorage.setItem(oreList[i].name,oreList[i].count);
     }
@@ -99,13 +97,13 @@ function refresh(){
     let x;
     for(i = 1; i <= Object.keys(oreList).length; i++){
         x = oreList[i].name;
-        document.getElementById(x + "Ct") = x + ": " + oreList[i].count;
+        document.getElementById(x + "Ct").innerHTML = x + ": " + oreList[i].count;
     }
     save();
 }
 
 ore.onclick = mine;
-importSave();
+loadSave();
 //document.getElementById("inSaveBtn").onclick = inputSave;
 
 
