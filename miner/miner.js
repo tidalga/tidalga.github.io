@@ -1,6 +1,3 @@
-var stone = 0;
-var dirt = 0;
-
 var oreHP = 5;
 var currOre = 1;
 var oreList = {
@@ -17,6 +14,8 @@ var oreList = {
         color: "gray",
     }
 }; 
+
+loadSave();
 
 var currOreD = document.getElementById("currOre");
 var oreHPD = document.getElementById("oreHPD");
@@ -66,15 +65,17 @@ function updateOre(o){
 
 function loadSave(){
     for(i = 1; i <= Object.keys(oreList).length; i++){
+        console.log("yeah");
         if(localStorage.getItem(oreList[i].name) != null){
-            oreList[i].count = localStorage.getItem(oreList[i].name);
+            oreList[i].count = Number(localStorage.getItem(oreList[i].name));
         }
     }
 }
 
 function save(){
     for(i = 1; i <= Object.keys(oreList).length; i++){
-        localStorage.setItem(oreList[i].name,oreList[i].count);
+        localStorage.setItem(oreList[i].name, oreList[i].count);
+        console.log(localStorage.getItem(oreList[i].name));
     }
 }
 
@@ -103,9 +104,7 @@ function refresh(){
 }
 
 ore.onclick = mine;
-loadSave();
 //document.getElementById("inSaveBtn").onclick = inputSave;
-
 
 /*
 Update Log:
