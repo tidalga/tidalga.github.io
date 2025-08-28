@@ -1,9 +1,31 @@
- <!DOCTYPE html>
- <html>
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="home.css">
+    <title>Home</title>
+</head>
+
+<html>
     <body>
-        <h1>placeholder until i think of something better to put</h1>
+        <h1>Projects</h1>
+        <div id="hotbar">
+            <button id="clickerBtn" class="hotbarBtn">Clicker</button>
+            <button id="artSimBtn" class="hotbarBtn">Artifact Simulator</button>
+            <button id="minerBtn" class="hotbarBtn">Miner</button>
+        </div>
+
         <!--1080x1920-->
-        <img src="https://static.wikia.nocookie.net/gensin-impact/images/f/fc/Yanfei_Card.png/" width="216" height="384"><br>
-        <a href="https://tidalga.github.io/clicker/">clicker game I made</a>
+        <div id="proj">
+            <div id="projImgDiv">
+                <img id="projImg" src="https://static.wikia.nocookie.net/gensin-impact/images/f/fc/Yanfei_Card.png">
+            </div>
+            <div id="projText">
+                <h2 id="projHeader">Placeholder heading</h2><br>
+                <span id="projBody">Placeholder description</span><br><br>
+                <a id="projLink" href="https://tidalga.github.io/clicker/">Visit the project here</a>
+                <!--can just use "clicker"-->
+            </div>
+        </div>
+        <script src="home.js"></script>
     </body>
- </html>
+</html>
