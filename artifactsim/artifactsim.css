@@ -1,3 +1,45 @@
 body{
-    background-color: rgb(255, 223, 195);
+    background-color: rgb(50, 50, 50);
+    text-align: center;
+}
+button{
+    background-color: rgb(50, 165, 50);
+    font-family: sans-serif;
+    color: white;
+    cursor: pointer;
+    border-color: transparent;
+    transition-duration: 0.2s;
+}
+button:hover{
+    background-color: rgb(200, 255, 200);
+    color: black;
+}
+h1{
+    color: white;
+    font-family: sans-serif;
+    font-size: 35px;
+}
+span{
+    font-size: 20px;
+}
+
+
+#currArtBorder{
+    background-color: rgb(255, 225, 195);
+    padding-left: 30%;
+    padding-right: 30%;
+    display: grid;
+    grid-template-columns: 3fr 8fr 2fr 1fr;
+}
+
+#currArtImg{
+    background-color: white;
+    padding: 10px;
+}
+.currArt{
+    background-color: rgb(230, 195, 160);
+    padding: 10px;
+}
+#typeEmoji{
+    font-size: 425%;
 }

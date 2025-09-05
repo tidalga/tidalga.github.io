@@ -1,9 +1,17 @@
 var genBtn = document.getElementById("genBtn");
 var cArtType = document.getElementById("type");
-var cArtAffix = document.getElementById("mainAffix");
-var cArtMinorAffixes = document.getElementById("minorAffixes");
+var cArtEmoji = document.getElementById("typeEmoji");
+var cArtAffix = document.getElementById("affix");
+var cArtAffixValues = document.getElementById("affixValues");
 
 const artifacts = [];
+const typeEmojis = {
+    "Flower of Life": "🌸",
+    "Plume of Death": "🪶",
+    "Sands of Eon": "⌛",
+    "Goblet of Eonothem": "🏺",
+    "Circlet of Logos": "👑"
+}
 const mainAffixValues = {
     "HP": 717,
     "ATK": 47,
@@ -40,7 +48,11 @@ var total = 0;
 
 /**==========[OVERALL HELPER FUNCTIONS]==========*/
 function rng(a,b){
-    return a + Math.floor(Math.random() * b);
+    if(a != 0){
+        return a + Math.floor(Math.random() * b);
+    }
+    return Math.floor(Math.random() * (b+1));
+    
 }
 //Helper function for getMinorAffixes
 function contains(array, value){
@@ -306,7 +318,7 @@ function generate(){
             },
         },
         value: affix[1],
-        level: 0
+        level: 1
     });
 
     display();
@@ -315,13 +327,15 @@ function generate(){
 /**==========[DISPLAY FUNCTIONS]==========*/
 function display(){
     let minorAffixString = "";
+    let minorAffixUps = "";
 
-    cArtType.innerHTML = "Artifact: " + artifacts[total].type;
-    cArtAffix.innerHTML = "Main affix: " + artifacts[total].affix + " (" + artifacts[total].value;
+    cArtType.innerHTML = artifacts[total].type;
+    cArtEmoji.innerHTML = typeEmojis[artifacts[total].type];
+    cArtAffix.innerHTML = artifacts[total].affix + " (" + artifacts[total].value;
     if(artifacts[total].affix != "ATK" && artifacts[total].affix != "HP" && artifacts[total].affix != "Elemental Mastery"){
         cArtAffix.innerHTML += "%";
     }
-    cArtAffix.innerHTML += ")";
+    cArtAffix.innerHTML += ")<br>";
 
     for(let i = 1; i < 5; i++){
         minorAffixString += artifacts[total].minorAffixes["mA" + i].type + " (" + artifacts[total].minorAffixes["mA" + i].value + ")";
@@ -329,20 +343,13 @@ function display(){
             minorAffixString += "<br>";
         }
     }
-    cArtMinorAffixes.innerHTML = "Minor affixes: <br><br>" + minorAffixString;
+    cArtAffix.innerHTML += "<br>" + minorAffixString;
+    cArtAffixValues.innerHTML = "Lvl: " + artifacts[total].level + "<br><br>";
+    for(let i = 1; i < 5; i++){
+        minorAffixUps += artifacts[total].minorAffixes["mA" + i].upgrades + "<br>";
+    }
+    cArtAffixValues.innerHTML += minorAffixUps;
     console.log("Number of artifacts: " + ++total);
 }
-
-/**
-function massProduce(){
-    //const start = Date.now();
-    console.time("Execution Time");
-    for(let i = 0; i < 1000; i++){
-        generate();
-    }
-    //const end = Date.now();
-    //console.log("Time taken: " + (end - start) + "ms");
-    console.timeEnd("Execution Time");
-}*/
 
 genBtn.onclick = generate;

@@ -2,16 +2,28 @@
 
 <head>
     <title>Artifact Simulator</title>
+    <meta charset="utf-8">
     <link rel="stylesheet" href="artifactsim.css">
 </head>
 
 <html>
     <body>
         <h1>Artifact Simulator</h1>
+        <div id="currArtBorder">
+            <div id="currArtImg">
+                <span id="type">Artifact: </span><br>
+                <span id="typeEmoji"></span>
+            </div id="currArtInnerBorder">
+                <div class="currArt">
+                    <span id="affix">Affixes:</span><br>
+                </div>
+                <div class="currArt">
+                    <span id="affixValues">Values:</span><br>
+                </div>
+            <div>
+        </div>
         <button id="genBtn">Click to generate artifact</button><br>
-        <scan id="type">Artifact: </scan><br>
-        <scan id="mainAffix">Main affix: </scan><br>
-        <scan id="minorAffixes">Minor affixes: </scan><br>
+        <button id="upBtn">Click to upgrade artifact</button><br>
         <script src="artifactsim.js"></script>
     </body>
 </html>
