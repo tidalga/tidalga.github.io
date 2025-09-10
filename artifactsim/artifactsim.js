@@ -1,8 +1,10 @@
 var genBtn = document.getElementById("genBtn");
+var upBtn = document.getElementById("upBtn");
 var cArtType = document.getElementById("type");
 var cArtEmoji = document.getElementById("typeEmoji");
 var cArtAffix = document.getElementById("affix");
 var cArtAffixValues = document.getElementById("affixValues");
+var moneySpent = document.getElementById("moneySpent");
 
 const artifacts = [];
 const typeEmojis = {
@@ -44,7 +46,12 @@ const minorAffixValues = {
     "CRIT Rate%": [2.72, 3.11, 3.50, 3.89],
     "CRIT DMG%": [5.44, 6.22, 6.99, 7.77],
 }
-var total = 0;
+const upgradeCosts = [16300, 28425, 42425, 66150, 117175];
+const suffixes = ["", "K", "M", "B", "T", "Qd", "Qn"];
+var total = -1;
+var currIdx = 0;
+var resinSpent = 0;
+var moraSpent = 0;
 
 /**==========[OVERALL HELPER FUNCTIONS]==========*/
 function rng(a,b){
@@ -62,6 +69,18 @@ function contains(array, value){
         }
     }
     return false;
+}
+function round(val, decimals){
+    return Math.round(val * 10**decimals)/10**decimals;
+}
+function format(val){
+    let temp = val;
+    let suffixIdx = 0;
+    while(temp/1000 >= 1){
+        suffixIdx++;
+        temp = temp/1000;
+    }
+    return round(temp, 2) + suffixes[suffixIdx];
 }
 
 /**==========[ARTIFACT FUNCTIONS]==========*/
@@ -298,28 +317,53 @@ function generate(){
         minorAffixes: {
             mA1: {
                 type: minorAffixes[0].type,
+                baseVal: minorAffixes[0].value,
                 value: minorAffixes[0].value,
                 upgrades: 0
             },
             mA2: {
                 type: minorAffixes[1].type,
+                baseVal: minorAffixes[1].value,
                 value: minorAffixes[1].value,
                 upgrades: 0
             },
             mA3: {
                 type: minorAffixes[2].type,
+                baseVal: minorAffixes[2].value,
                 value: minorAffixes[2].value,
                 upgrades: 0
             },
             mA4: {
                 type: minorAffixes[3].type,
+                baseVal: minorAffixes[3].value,
                 value: minorAffixes[3].value,
                 upgrades: 0
             },
         },
+        baseVal: affix[1],
         value: affix[1],
-        level: 1
+        level: 0
     });
+
+    total++;
+    resinSpent += 20;
+    display();
+}
+
+function upgrade(){
+    let currArt = artifacts[currIdx];
+    let num = rng(1,4);
+    let num2 = rng(0,3);
+    let mult;
+
+    if(currArt.level != 20){
+        currArt.level += 4;
+        mult = currArt.level / 4;
+        currArt.value = currArt.baseVal + currArt.baseVal * (17/15 * mult);
+        currArt.minorAffixes["mA" + num].upgrades++;
+        currArt.minorAffixes["mA" + num].value += currArt.minorAffixes["mA" + num].baseVal * (10-num2)/10;
+        moraSpent += upgradeCosts[mult - 1];
+    }
 
     display();
 }
@@ -328,28 +372,40 @@ function generate(){
 function display(){
     let minorAffixString = "";
     let minorAffixUps = "";
+    let minorAffix;
 
+    currIdx = total;
     cArtType.innerHTML = artifacts[total].type;
     cArtEmoji.innerHTML = typeEmojis[artifacts[total].type];
-    cArtAffix.innerHTML = artifacts[total].affix + " (" + artifacts[total].value;
+    cArtAffix.innerHTML = artifacts[total].affix + " (" + round(artifacts[total].value, 1);
     if(artifacts[total].affix != "ATK" && artifacts[total].affix != "HP" && artifacts[total].affix != "Elemental Mastery"){
         cArtAffix.innerHTML += "%";
     }
-    cArtAffix.innerHTML += ")<br>";
+    cArtAffix.innerHTML += ")<br><br>";
 
     for(let i = 1; i < 5; i++){
-        minorAffixString += artifacts[total].minorAffixes["mA" + i].type + " (" + artifacts[total].minorAffixes["mA" + i].value + ")";
+        minorAffix = artifacts[total].minorAffixes["mA" + i].type;
+        minorAffixString += minorAffix + " (" + round(artifacts[total].minorAffixes["mA" + i].value, 2);
+        if(minorAffix != "ATK" && minorAffix != "HP" && minorAffix != "DEF" && minorAffix != "Elemental Mastery"){
+            minorAffixString += "%";
+        }
+        minorAffixString += ")";
         if(i != 4){
             minorAffixString += "<br>";
-        }
+        }   
     }
-    cArtAffix.innerHTML += "<br>" + minorAffixString;
+    cArtAffix.innerHTML += minorAffixString;
     cArtAffixValues.innerHTML = "Lvl: " + artifacts[total].level + "<br><br>";
     for(let i = 1; i < 5; i++){
-        minorAffixUps += artifacts[total].minorAffixes["mA" + i].upgrades + "<br>";
+        minorAffixUps += artifacts[total].minorAffixes["mA" + i].upgrades;
+        if(i != 4){
+            minorAffixUps += "<br>";
+        }
     }
     cArtAffixValues.innerHTML += minorAffixUps;
-    console.log("Number of artifacts: " + ++total);
+    moneySpent.innerHTML = "Resin spent: " + format(resinSpent) + "<br>Mora spent: " + format(moraSpent);
+    console.log("Number of artifacts: " + total);
 }
 
 genBtn.onclick = generate;
+upBtn.onclick = upgrade;

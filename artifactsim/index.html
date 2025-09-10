@@ -4,6 +4,7 @@
     <title>Artifact Simulator</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="artifactsim.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
 </head>
 
 <html>
@@ -11,19 +12,21 @@
         <h1>Artifact Simulator</h1>
         <div id="currArtBorder">
             <div id="currArtImg">
-                <span id="type">Artifact: </span><br>
+                <span id="type">Artifact: </span>
                 <span id="typeEmoji"></span>
             </div id="currArtInnerBorder">
                 <div class="currArt">
-                    <span id="affix">Affixes:</span><br>
+                    <span id="affix">Affixes:</span>
                 </div>
                 <div class="currArt">
-                    <span id="affixValues">Values:</span><br>
+                    <span id="affixValues">Values:</span>
                 </div>
             <div>
         </div>
-        <button id="genBtn">Click to generate artifact</button><br>
-        <button id="upBtn">Click to upgrade artifact</button><br>
+        <button id="genBtn">Click to generate artifact</button>
+        <span id="moneySpent">Resin spent: 0<br>Mora spent: 0</span>
+        <button id="upBtn">Click to upgrade artifact</button>
+
         <script src="artifactsim.js"></script>
     </body>
 </html>
