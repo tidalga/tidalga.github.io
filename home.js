@@ -15,7 +15,7 @@ var projects = {
     },
     "artifactsim": {
         header: "Simulate the painful grind to your heart's content!",
-        body: "I have yet to create this project, but I already have many ideas planned for this. I plan on making each of the artifacts using JavaScript objects along with making an inventory system that utilizes sorting algorithms.",
+        body: "I started working on this during Summer 2025. The game utilizes multi-layer JavaScript objects to store all of the values of each artifact. Later on I plan on making an inventory system that utilizes sorting algorithms. From this project, I was able to learn techniques on how to optimize code.",
         img: "https://static.wikia.nocookie.net/gensin-impact/images/c/c2/Item_Entangling_Bloom.png"
     },
     "miner": {
@@ -40,6 +40,34 @@ showProj("clicker");
 
 /*
 Update Log:
+9/9/25 - Artifact Simulator v0.4
+    Artifact main and minor affixes can now be upgraded
+        Minor affixes that are a percentage now have the % sign
+    Total amount of mora and resin you would have spent now displayed
+    Added emoji fallback font (you're welcome Nunners)
+    Temporary fix for webpage layout of buttons
+    (Hopefully now I can work on the inventory system...)
+
+9/4/25 - Artifact Simulator v0.3
+    Added some alright design
+        Text and buttons are no longer the default design
+        Arranged artifact stats to be easier to read
+        Added emojis for each artifact type
+        Placeholder column and button for upgrading artifacts
+    Updated description of project on home page
+    Fixed rng function (my bad...)
+
+9/3/25 - Artifact Simulator v0.2
+    Added main and minor affix values (forgot I never added it even for the main affix lol)
+    Tried to optimize the code a bit (10% faster WOOOO)
+    Minor affixes now displayed on separate lines for ez readability
+
+9/2/25 - Artifact Simulator v0.1
+    Super bare bones right now
+        very little functionality right now
+        like no CSS
+    Currently generates everything of an artifact except for minor affix values and displays only 1
+
 8/27/25 - Home page revamp
     Created nice dividers between each of my projects using lots of divs (so professional wow)
     Added links to my miner game and link to future artifact simulator
