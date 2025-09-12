@@ -10,23 +10,26 @@
 <html>
     <body>
         <h1>Artifact Simulator</h1>
-        <div id="currArtBorder">
-            <div id="currArtImg">
-                <span id="type">Artifact: </span>
+        <div class="currArtBorder">
+            <div class="currArt" id="currArtImg">
+                <span id="type">Artifact</span>
                 <span id="typeEmoji"></span>
-            </div id="currArtInnerBorder">
-                <div class="currArt">
-                    <span id="affix">Affixes:</span>
+                <button class="mainBtns" id="genBtn">Generate</button>
+            </div>
+            <div class="currArt">
+                <span id="affix">Main affix</span>
+                <span id="affixVals"></span>
+                <div id="moneySpentDiv">
+                    <span id="moneySpent">Resin spent: 0<br>Mora spent: 0</span>
                 </div>
-                <div class="currArt">
-                    <span id="affixValues">Values:</span>
-                </div>
-            <div>
+            </div>
+            <div class="currArt" id="upsDiv">
+                <span id="lvl">Lvl:</span>
+                <span id="affixUps"></span>
+                <button class="mainBtns" id="upBtn">Upgrade</button>
+            </div>
         </div>
-        <button id="genBtn">Click to generate artifact</button>
-        <span id="moneySpent">Resin spent: 0<br>Mora spent: 0</span>
-        <button id="upBtn">Click to upgrade artifact</button>
-
+        
         <script src="artifactsim.js"></script>
     </body>
 </html>

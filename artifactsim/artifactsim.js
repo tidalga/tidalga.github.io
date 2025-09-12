@@ -3,7 +3,9 @@ var upBtn = document.getElementById("upBtn");
 var cArtType = document.getElementById("type");
 var cArtEmoji = document.getElementById("typeEmoji");
 var cArtAffix = document.getElementById("affix");
-var cArtAffixValues = document.getElementById("affixValues");
+var cArtAffixVals = document.getElementById("affixVals");
+var cArtLvl = document.getElementById("lvl");
+var cArtAffixUps = document.getElementById("affixUps");
 var moneySpent = document.getElementById("moneySpent");
 
 const artifacts = [];
@@ -374,15 +376,17 @@ function display(){
     let minorAffixUps = "";
     let minorAffix;
 
+    //Type + emoji
     currIdx = total;
     cArtType.innerHTML = artifacts[total].type;
     cArtEmoji.innerHTML = typeEmojis[artifacts[total].type];
+    
+    //Main + minor affixes
     cArtAffix.innerHTML = artifacts[total].affix + " (" + round(artifacts[total].value, 1);
     if(artifacts[total].affix != "ATK" && artifacts[total].affix != "HP" && artifacts[total].affix != "Elemental Mastery"){
         cArtAffix.innerHTML += "%";
     }
-    cArtAffix.innerHTML += ")<br><br>";
-
+    cArtAffix.innerHTML += ")";
     for(let i = 1; i < 5; i++){
         minorAffix = artifacts[total].minorAffixes["mA" + i].type;
         minorAffixString += minorAffix + " (" + round(artifacts[total].minorAffixes["mA" + i].value, 2);
@@ -394,15 +398,19 @@ function display(){
             minorAffixString += "<br>";
         }   
     }
-    cArtAffix.innerHTML += minorAffixString;
-    cArtAffixValues.innerHTML = "Lvl: " + artifacts[total].level + "<br><br>";
+    cArtAffixVals.innerHTML = minorAffixString + "<br>";
+
+    //Level + minor affix upgrades
+    cArtLvl.innerHTML = "Lvl: " + artifacts[total].level;
     for(let i = 1; i < 5; i++){
         minorAffixUps += artifacts[total].minorAffixes["mA" + i].upgrades;
         if(i != 4){
             minorAffixUps += "<br>";
-        }
+        }  
     }
-    cArtAffixValues.innerHTML += minorAffixUps;
+    cArtAffixUps.innerHTML = minorAffixUps;
+
+    //Resources spent
     moneySpent.innerHTML = "Resin spent: " + format(resinSpent) + "<br>Mora spent: " + format(moraSpent);
     console.log("Number of artifacts: " + total);
 }
