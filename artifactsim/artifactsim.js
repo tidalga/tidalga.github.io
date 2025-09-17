@@ -7,6 +7,7 @@ var cArtAffixVals = document.getElementById("affixVals");
 var cArtLvl = document.getElementById("lvl");
 var cArtAffixUps = document.getElementById("affixUps");
 var moneySpent = document.getElementById("moneySpent");
+var invBorder = document.getElementById("invBorder");
 
 const artifacts = [];
 const typeEmojis = {
@@ -52,6 +53,7 @@ const upgradeCosts = [16300, 28425, 42425, 66150, 117175];
 const suffixes = ["", "K", "M", "B", "T", "Qd", "Qn"];
 var total = -1;
 var currIdx = 0;
+var lastIdx = -1;
 var resinSpent = 0;
 var moraSpent = 0;
 
@@ -83,6 +85,10 @@ function format(val){
         temp = temp/1000;
     }
     return round(temp, 2) + suffixes[suffixIdx];
+}
+function updateIdx(idx){
+    lastIdx = currIdx;
+    currIdx = idx;
 }
 
 /**==========[ARTIFACT FUNCTIONS]==========*/
@@ -349,7 +355,6 @@ function generate(){
 
     total++;
     resinSpent += 20;
-    display();
 }
 
 function upgrade(){
@@ -366,30 +371,27 @@ function upgrade(){
         currArt.minorAffixes["mA" + num].value += currArt.minorAffixes["mA" + num].baseVal * (10-num2)/10;
         moraSpent += upgradeCosts[mult - 1];
     }
-
-    display();
 }
 
 /**==========[DISPLAY FUNCTIONS]==========*/
-function display(){
+function display(idx){
     let minorAffixString = "";
     let minorAffixUps = "";
     let minorAffix;
 
     //Type + emoji
-    currIdx = total;
-    cArtType.innerHTML = artifacts[total].type;
-    cArtEmoji.innerHTML = typeEmojis[artifacts[total].type];
+    cArtType.innerHTML = artifacts[currIdx].type;
+    cArtEmoji.innerHTML = typeEmojis[artifacts[currIdx].type];
     
     //Main + minor affixes
-    cArtAffix.innerHTML = artifacts[total].affix + " (" + round(artifacts[total].value, 1);
-    if(artifacts[total].affix != "ATK" && artifacts[total].affix != "HP" && artifacts[total].affix != "Elemental Mastery"){
+    cArtAffix.innerHTML = artifacts[currIdx].affix + " (" + round(artifacts[currIdx].value, 1);
+    if(artifacts[currIdx].affix != "ATK" && artifacts[currIdx].affix != "HP" && artifacts[currIdx].affix != "Elemental Mastery"){
         cArtAffix.innerHTML += "%";
     }
     cArtAffix.innerHTML += ")";
     for(let i = 1; i < 5; i++){
-        minorAffix = artifacts[total].minorAffixes["mA" + i].type;
-        minorAffixString += minorAffix + " (" + round(artifacts[total].minorAffixes["mA" + i].value, 2);
+        minorAffix = artifacts[currIdx].minorAffixes["mA" + i].type;
+        minorAffixString += minorAffix + " (" + round(artifacts[currIdx].minorAffixes["mA" + i].value, 2);
         if(minorAffix != "ATK" && minorAffix != "HP" && minorAffix != "DEF" && minorAffix != "Elemental Mastery"){
             minorAffixString += "%";
         }
@@ -398,12 +400,12 @@ function display(){
             minorAffixString += "<br>";
         }   
     }
-    cArtAffixVals.innerHTML = minorAffixString + "<br>";
+    cArtAffixVals.innerHTML = minorAffixString;
 
     //Level + minor affix upgrades
-    cArtLvl.innerHTML = "Lvl: " + artifacts[total].level;
+    cArtLvl.innerHTML = "Lvl: " + artifacts[currIdx].level;
     for(let i = 1; i < 5; i++){
-        minorAffixUps += artifacts[total].minorAffixes["mA" + i].upgrades;
+        minorAffixUps += artifacts[currIdx].minorAffixes["mA" + i].upgrades;
         if(i != 4){
             minorAffixUps += "<br>";
         }  
@@ -412,8 +414,78 @@ function display(){
 
     //Resources spent
     moneySpent.innerHTML = "Resin spent: " + format(resinSpent) + "<br>Mora spent: " + format(moraSpent);
-    console.log("Number of artifacts: " + total);
+    
 }
 
-genBtn.onclick = generate;
-upBtn.onclick = upgrade;
+//Helper function for addToInv
+function resetDiv(div){
+    if(lastIdx != -1){
+        let oldDiv = document.getElementById("art " + lastIdx);
+        oldDiv.style.backgroundColor = "white";
+    }
+    div.style.backgroundColor = "rgb(255, 255, 120)";
+}
+
+function addToInv(){
+    const div = document.createElement("div");
+    const mainAffix = document.createElement("span");
+    const artEmoji = document.createElement("emoji");
+    const affixes = [];
+
+    div.id = "art " + total;
+    div.classList.add("invArt");
+    if(artifacts[total].affix == "Energy Recharge%"){
+        mainAffix.innerHTML = "ER%";
+    }
+    else if(artifacts[total].affix == "Elemental Mastery"){
+        mainAffix.innerHTML = "EM";
+    }
+    else if(artifacts[total].affix.includes("Bonus")){
+        mainAffix.innerHTML = artifacts[total].affix.split(" ", 1)[0] + "%";
+    }
+    else{
+        mainAffix.innerHTML = artifacts[total].affix;
+    }
+    artEmoji.innerHTML = typeEmojis[artifacts[total].type];
+    div.appendChild(mainAffix);
+    div.appendChild(artEmoji);
+    for(let i = 0; i < 4; i++){
+        affixes.push(document.createElement("smol"));
+        affixes[i].innerHTML = artifacts[total].minorAffixes["mA" + (i + 1)].type;
+        div.appendChild(affixes[i]);
+    }
+    div.addEventListener("click", function(){
+        let idx = div.id.split(" ")[1];
+        if(idx != currIdx){
+            updateIdx(idx);
+            display();
+            resetDiv(div);
+        }
+    });
+    div.addEventListener("mouseenter", function(){div.style.backgroundColor = "rgb(255, 255, 120)"});
+    div.addEventListener("mouseleave", function(){
+        if(div.id.split(" ")[1] != currIdx){
+            div.style.backgroundColor = "white";
+        }
+    });
+    
+    resetDiv(div);
+    invBorder.appendChild(div);
+}
+
+
+genBtn.onclick = function(){
+    console.time("Runtime");
+    for(let i = 0; i < 1; i++){
+        generate();
+        addToInv();
+        updateIdx(total);
+        resetDiv(document.getElementById("art " + currIdx));
+    }
+    display();
+    console.timeEnd("Runtime");
+};
+upBtn.onclick = function(){
+    upgrade();
+    display();
+};

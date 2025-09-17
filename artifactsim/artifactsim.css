@@ -16,6 +16,16 @@ span{
     font-family: "Segoe UI";
     margin: auto;
 }
+smol{
+    font-size: 75%;
+    font-family: "Segoe UI";
+    margin: auto;
+}
+emoji{
+    font-size: 400%;
+    font-family: monospace, sans-serif, "Segoe UI", "Noto Color Emoji";
+    margin: auto;
+}
 
 
 #affix, #lvl{
@@ -26,12 +36,23 @@ span{
     padding: 10px;
     display: grid;
 }
-#typeEmoji{
-    font-size: 400%;
-    font-family: monospace, sans-serif, "Segoe UI", "Noto Color Emoji";
-}
 #upsDiv{
     background-color: rgb(230, 185, 140);
+}
+#currArtBorder{
+    background-color: rgb(30, 30, 30);
+    padding-top: 3%;
+    padding-left: 30%;
+    padding-right: 30%;
+    display: grid;
+    grid-template-columns: 3fr 8fr 3fr;
+    /*position:fixed;*/
+}
+#invBorder{
+    background-color: rgb(30, 30, 30);
+    padding: 3%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 
 
@@ -52,10 +73,15 @@ span{
     border-radius: 25pt;
     transition-duration: 0.2s;
 }
-.currArtBorder{
-    background-color: rgb(30, 30, 30);
-    padding-left: 30%;
-    padding-right: 30%;
+.invArt{
+    background-color: white;
+    cursor: pointer;
+    padding: 10px;
     display: grid;
-    grid-template-columns: 3fr 8fr 3fr;
+    grid-template-rows: 1fr 3fr 1fr;
+}
+.invArtAffixes{
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    margin: auto;
 }
