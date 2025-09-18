@@ -9,7 +9,14 @@ var cArtAffixUps = document.getElementById("affixUps");
 var moneySpent = document.getElementById("moneySpent");
 var invBorder = document.getElementById("invBorder");
 
-const artifacts = [];
+const stats = {
+    "total": -1,
+    "currIdx": 0,
+    "lastIdx": -1,
+    "resinSpent": 0,
+    "moraSpent": 0,
+    "artifacts": []
+}
 const typeEmojis = {
     "Flower of Life": "🌸",
     "Plume of Death": "🪶",
@@ -51,11 +58,7 @@ const minorAffixValues = {
 }
 const upgradeCosts = [16300, 28425, 42425, 66150, 117175];
 const suffixes = ["", "K", "M", "B", "T", "Qd", "Qn"];
-var total = -1;
-var currIdx = 0;
-var lastIdx = -1;
-var resinSpent = 0;
-var moraSpent = 0;
+const storageElms = ["resinSpent", "moraSpent", "total", "artifacts"];
 
 /**==========[OVERALL HELPER FUNCTIONS]==========*/
 function rng(a,b){
@@ -87,8 +90,8 @@ function format(val){
     return round(temp, 2) + suffixes[suffixIdx];
 }
 function updateIdx(idx){
-    lastIdx = currIdx;
-    currIdx = idx;
+    stats.lastIdx = stats.currIdx;
+    stats.currIdx = idx;
 }
 
 /**==========[ARTIFACT FUNCTIONS]==========*/
@@ -319,7 +322,7 @@ function generate(){
     //Determining Minor Affixes
     let minorAffixes = getMinorAffixes(affix[0]);
     
-    artifacts.push({
+    stats.artifacts.push({
         type: type,
         affix: affix[0],
         minorAffixes: {
@@ -353,12 +356,12 @@ function generate(){
         level: 0
     });
 
-    total++;
-    resinSpent += 20;
+    stats.total++;
+    stats.resinSpent += 20;
 }
 
 function upgrade(){
-    let currArt = artifacts[currIdx];
+    let currArt = stats.artifacts[stats.currIdx];
     let num = rng(1,4);
     let num2 = rng(0,3);
     let mult;
@@ -369,29 +372,29 @@ function upgrade(){
         currArt.value = currArt.baseVal + currArt.baseVal * (17/15 * mult);
         currArt.minorAffixes["mA" + num].upgrades++;
         currArt.minorAffixes["mA" + num].value += currArt.minorAffixes["mA" + num].baseVal * (10-num2)/10;
-        moraSpent += upgradeCosts[mult - 1];
+        stats.moraSpent += upgradeCosts[mult - 1];
     }
 }
 
 /**==========[DISPLAY FUNCTIONS]==========*/
-function display(idx){
+function display(){
     let minorAffixString = "";
     let minorAffixUps = "";
     let minorAffix;
 
     //Type + emoji
-    cArtType.innerHTML = artifacts[currIdx].type;
-    cArtEmoji.innerHTML = typeEmojis[artifacts[currIdx].type];
+    cArtType.innerHTML = stats.artifacts[stats.currIdx].type;
+    cArtEmoji.innerHTML = typeEmojis[stats.artifacts[stats.currIdx].type];
     
     //Main + minor affixes
-    cArtAffix.innerHTML = artifacts[currIdx].affix + " (" + round(artifacts[currIdx].value, 1);
-    if(artifacts[currIdx].affix != "ATK" && artifacts[currIdx].affix != "HP" && artifacts[currIdx].affix != "Elemental Mastery"){
+    cArtAffix.innerHTML = stats.artifacts[stats.currIdx].affix + " (" + round(stats.artifacts[stats.currIdx].value, 1);
+    if(stats.artifacts[stats.currIdx].affix != "ATK" && stats.artifacts[stats.currIdx].affix != "HP" && stats.artifacts[stats.currIdx].affix != "Elemental Mastery"){
         cArtAffix.innerHTML += "%";
     }
     cArtAffix.innerHTML += ")";
     for(let i = 1; i < 5; i++){
-        minorAffix = artifacts[currIdx].minorAffixes["mA" + i].type;
-        minorAffixString += minorAffix + " (" + round(artifacts[currIdx].minorAffixes["mA" + i].value, 2);
+        minorAffix = stats.artifacts[stats.currIdx].minorAffixes["mA" + i].type;
+        minorAffixString += minorAffix + " (" + round(stats.artifacts[stats.currIdx].minorAffixes["mA" + i].value, 2);
         if(minorAffix != "ATK" && minorAffix != "HP" && minorAffix != "DEF" && minorAffix != "Elemental Mastery"){
             minorAffixString += "%";
         }
@@ -403,9 +406,9 @@ function display(idx){
     cArtAffixVals.innerHTML = minorAffixString;
 
     //Level + minor affix upgrades
-    cArtLvl.innerHTML = "Lvl: " + artifacts[currIdx].level;
+    cArtLvl.innerHTML = "Lvl: " + stats.artifacts[stats.currIdx].level;
     for(let i = 1; i < 5; i++){
-        minorAffixUps += artifacts[currIdx].minorAffixes["mA" + i].upgrades;
+        minorAffixUps += stats.artifacts[stats.currIdx].minorAffixes["mA" + i].upgrades;
         if(i != 4){
             minorAffixUps += "<br>";
         }  
@@ -413,50 +416,53 @@ function display(idx){
     cArtAffixUps.innerHTML = minorAffixUps;
 
     //Resources spent
-    moneySpent.innerHTML = "Resin spent: " + format(resinSpent) + "<br>Mora spent: " + format(moraSpent);
+    moneySpent.innerHTML = "Resin spent: " + format(stats.resinSpent) + "<br>Mora spent: " + format(stats.moraSpent);
     
 }
 
 //Helper function for addToInv
 function resetDiv(div){
-    if(lastIdx != -1){
-        let oldDiv = document.getElementById("art " + lastIdx);
+    if(stats.lastIdx != -1 && stats.lastIdx != stats.currIdx){
+        let oldDiv = document.getElementById("art " + stats.lastIdx);
         oldDiv.style.backgroundColor = "white";
     }
     div.style.backgroundColor = "rgb(255, 255, 120)";
 }
 
-function addToInv(){
+function addToInv(idx){
     const div = document.createElement("div");
     const mainAffix = document.createElement("span");
     const artEmoji = document.createElement("emoji");
     const affixes = [];
 
-    div.id = "art " + total;
+    //Adding elements and properties to div
+    div.id = "art " + idx;
     div.classList.add("invArt");
-    if(artifacts[total].affix == "Energy Recharge%"){
+    if(stats.artifacts[idx].affix == "Energy Recharge%"){
         mainAffix.innerHTML = "ER%";
     }
-    else if(artifacts[total].affix == "Elemental Mastery"){
+    else if(stats.artifacts[idx].affix == "Elemental Mastery"){
         mainAffix.innerHTML = "EM";
     }
-    else if(artifacts[total].affix.includes("Bonus")){
-        mainAffix.innerHTML = artifacts[total].affix.split(" ", 1)[0] + "%";
+    else if(stats.artifacts[idx].affix.includes("Bonus")){
+        mainAffix.innerHTML = stats.artifacts[idx].affix.split(" ", 1)[0] + "%";
     }
     else{
-        mainAffix.innerHTML = artifacts[total].affix;
+        mainAffix.innerHTML = stats.artifacts[idx].affix;
     }
-    artEmoji.innerHTML = typeEmojis[artifacts[total].type];
+    artEmoji.innerHTML = typeEmojis[stats.artifacts[idx].type];
     div.appendChild(mainAffix);
     div.appendChild(artEmoji);
+    //Initializing elements for minor affixes
     for(let i = 0; i < 4; i++){
         affixes.push(document.createElement("smol"));
-        affixes[i].innerHTML = artifacts[total].minorAffixes["mA" + (i + 1)].type;
+        affixes[i].innerHTML = stats.artifacts[idx].minorAffixes["mA" + (i + 1)].type;
         div.appendChild(affixes[i]);
     }
+    //Adding event listeners to div
     div.addEventListener("click", function(){
         let idx = div.id.split(" ")[1];
-        if(idx != currIdx){
+        if(idx != stats.currIdx){
             updateIdx(idx);
             display();
             resetDiv(div);
@@ -464,28 +470,81 @@ function addToInv(){
     });
     div.addEventListener("mouseenter", function(){div.style.backgroundColor = "rgb(255, 255, 120)"});
     div.addEventListener("mouseleave", function(){
-        if(div.id.split(" ")[1] != currIdx){
+        if(div.id.split(" ")[1] != stats.currIdx){
             div.style.backgroundColor = "white";
         }
     });
-    
+    //Changing color of div + assigning div to main div
     resetDiv(div);
     invBorder.appendChild(div);
 }
 
+/**==========[DATA SAVING FUNCTIONS]==========*/
+function save(){
+    for(let i = 0; storageElms[i] != "artifacts"; i++){
+        localStorage.setItem("artifactsim_" + storageElms[i], stats[storageElms[i]]);
+    }
+    localStorage.setItem("artifactsim_artifacts", JSON.stringify(stats["artifacts"]));
+}
+
+function fetchSave(){
+    let temp;
+    for(let i = 0; i < storageElms.length; i++){
+        temp = localStorage.getItem("artifactsim_" + storageElms[i]);
+        if(temp != null){
+            if(storageElms[i] == "artifacts"){
+                stats[storageElms[i]] = JSON.parse(temp);
+            }
+            else{
+                stats[storageElms[i]] = Number(temp);
+            }
+        }
+        else{
+            if(storageElms[i] == "artifacts"){
+                localStorage.setItem("artifactsim_" + storageElms[i], "[]");
+            }
+            else{
+                localStorage.setItem("artifactsim_" + storageElms[i], "");
+            }
+        }
+    }
+}
+
+function loadInv(){
+    for(let i = 0; i < stats.total; i++){
+        addToInv(i);
+        updateIdx(i);
+        if(i > 0){
+            resetDiv(document.getElementById("art " + (i - 1)));
+        }
+    }
+    if(stats.total > 0){
+        resetDiv(document.getElementById("art " + (stats.total - 1)));
+    }
+}
+
+
+/**==========[EVENTS]==========*/
+fetchSave();
+loadInv();
+if(stats.total != -1){
+    display();
+}
 
 genBtn.onclick = function(){
-    console.time("Runtime");
+    console.time("Runtime for 1 artifact");
     for(let i = 0; i < 1; i++){
         generate();
-        addToInv();
-        updateIdx(total);
-        resetDiv(document.getElementById("art " + currIdx));
+        addToInv(stats.total);
+        updateIdx(stats.total);
+        resetDiv(document.getElementById("art " + stats.currIdx));
     }
+    save();
     display();
-    console.timeEnd("Runtime");
+    console.timeEnd("Runtime for 1 artifact");
 };
 upBtn.onclick = function(){
     upgrade();
+    save();
     display();
 };
