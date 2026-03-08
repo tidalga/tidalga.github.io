@@ -1,17 +1,27 @@
-function setup() {
-  createCanvas(600, 600);
-  date = new Date();
-  startUpTime = date.getTime();
-  oldTime = date.getTime();
+/*NOTE: This project contains other JavaScript files within [scripts/]*/
+
+/*==========[p5.js FUNCTIONS]==========*/
+function setup(){
+    createCanvas(canvasWidth, canvasHeight);
+    gameSetup();
+    drawBoard();
 }
 
-function draw() {
-  background(0);
-  
-  circle(circX,circY,circRadius);
-  circX-=5;
-  if(circX <= 0-circRadius/2){
-    circX = 600;
-  }
-  hello();
+function keyPressed(){
+    calcTime();
+    checkValidHit();
+}
+
+function mouseClicked(){
+
+}
+
+function draw(){
+    background(0);
+    updateBoard();
+    // circle(circX,circY,circRadius);
+    // circX-=5;
+    // if(circX <= 0-circRadius/2){
+    //     circX = canvasWidth;
+    // }
 }
