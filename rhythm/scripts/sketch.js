@@ -1,15 +1,21 @@
 /*NOTE: This project contains other JavaScript files within [scripts/]*/
 
 /*==========[p5.js FUNCTIONS]==========*/
+function preload(){
+    beatmaps["palette"].audio = loadSound(beatmaps["palette"].audiopath);
+}
+
 function setup(){
     createCanvas(canvasWidth, canvasHeight);
     gameSetup();
-    drawBoard();
+    boardSetup();
+    beatmaps["palette"].audio.play();
 }
 
 function keyPressed(){
     calcTime();
-    checkValidHit();
+    let num = checkValidHit();
+    registerHit(num);
 }
 
 function mouseClicked(){
