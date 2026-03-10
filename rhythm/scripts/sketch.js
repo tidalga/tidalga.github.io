@@ -1,33 +1,24 @@
 /*NOTE: This project contains other JavaScript files within [scripts/]*/
 
-/*==========[p5.js FUNCTIONS]==========*/
+/*==========[q5.js FUNCTIONS]==========*/
 function preload(){
-    beatmaps["palette"].audio = loadSound(beatmaps["palette"].audiopath);
+    beatmaps[beatmaps.currentMap].audio = loadSound(beatmaps[beatmaps.currentMap].audiopath);
 }
 
 function setup(){
     createCanvas(canvasWidth, canvasHeight);
     gameSetup();
-    boardSetup();
-    beatmaps["palette"].audio.play();
+    circleSetup();
+    beatmaps[beatmaps.currentMap].audio.play();
 }
 
-function keyPressed(){
-    calcTime();
-    let num = checkValidHit();
-    registerHit(num);
-}
-
-function mouseClicked(){
-
-}
+q5.keyPressed = function(){
+    let time = calcTime();
+    let pos = calcHitPos(mouseX, mouseY);
+    registerHit(time, pos);
+};
 
 function draw(){
     background(0);
-    updateBoard();
-    // circle(circX,circY,circRadius);
-    // circX-=5;
-    // if(circX <= 0-circRadius/2){
-    //     circX = canvasWidth;
-    // }
+    updateBoard(calcHitPos(mouseX, mouseY));
 }

@@ -1,4 +1,7 @@
-
+/*
+Referenced w3schools for learning how to use JavaScript classes
+Link: https://www.w3schools.com/js/js_class_inheritance.asp
+*/
 class hitCircle{
     constructor(xPos, yPos, circRadius){
         this._xPos = xPos;
@@ -17,15 +20,6 @@ class hitCircle{
     get yPos(){
         return this._yPos;
     }
-
-    // set yPos(y){
-    //     this._yPos = y;
-    // }
-
-    // update(x,y){
-    //     this.xPos(x);
-    //     this.yPos(y);
-    // }
 
     drawCircle(){
         circle(this._xPos, this._yPos, this._circRadius);
