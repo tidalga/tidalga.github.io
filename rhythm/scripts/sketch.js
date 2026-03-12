@@ -2,14 +2,16 @@
 
 /*==========[q5.js FUNCTIONS]==========*/
 function preload(){
-    beatmaps[beatmaps.currentMap].audio = loadSound(beatmaps[beatmaps.currentMap].audiopath);
+    beatmaps[beatmaps.currMap].audio = loadSound(beatmaps[beatmaps.currMap].audiopath);
+    beatmaps[beatmaps.currMap].audio.volume = 0.125;
 }
 
 function setup(){
     createCanvas(canvasWidth, canvasHeight);
-    gameSetup();
+    canvasSetup();
+    domVarsSetup();
     circleSetup();
-    beatmaps[beatmaps.currentMap].audio.play();
+    noLoop();
 }
 
 q5.keyPressed = function(){
