@@ -1,4 +1,7 @@
-/*NOTE: This project contains other JavaScript files within [scripts/]*/
+/*
+NOTE: This project contains other JavaScript files within [scripts/]
+Other additions present in index.html and style.css
+*/
 
 /*==========[q5.js FUNCTIONS]==========*/
 function preload(){
@@ -14,7 +17,7 @@ function setup(){
     noLoop();
 }
 
-q5.keyPressed = function(){
+function keyPressed(){
     let time = calcTime();
     let pos = calcHitPos(mouseX, mouseY);
     registerHit(time, pos);

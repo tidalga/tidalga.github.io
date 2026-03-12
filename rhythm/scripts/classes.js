@@ -8,20 +8,16 @@ class hitCircle{
         this._yPos = yPos;
         this._circRadius = circRadius;
     }
-
     get xPos(){
         return this._xPos;
     }
-
-    // set xPos(x){
-    //     this._xPos = x;
-    // }
-
     get yPos(){
         return this._yPos;
     }
-
     drawCircle(){
         circle(this._xPos, this._yPos, this._circRadius);
+    }
+    drawCircleRad(rad){
+        circle(this._xPos, this._yPos, rad);
     }
 }

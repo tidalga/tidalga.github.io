@@ -34,7 +34,6 @@ var circData = {
     boardCircles: [],
     currCircles: [],
     level: {
-        hitData: [],
         firstIdx: 0,
         lastIdx: 0,
         currIdx: 0,

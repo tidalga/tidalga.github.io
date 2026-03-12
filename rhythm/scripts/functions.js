@@ -5,7 +5,7 @@ function canvasSetup(){
     div.appendChild(canvas[0]);
 
     let button = document.getElementById("startBtn");
-    button.onclick = () => {
+    button.onclick = function(){
         circDataSetup();
         statsSetup();
         startOrStopSong(button);
@@ -59,9 +59,29 @@ function drawBoard(pos){
     }
 }
 
+function drawHitCircles(time){
+    let notes = beatmaps[beatmaps.currMap].notes;
+    push();
+    fill(220);
+    opacity(0.5);
+    for(let i = circData.level.firstIdx; i <= circData.level.lastIdx; i++){
+        if(i >= circData.level.currIdx){
+            let note = beatmaps[beatmaps.currMap].notes[i];
+            let radius = map(time, note.startTime, note.hitTime, 0, circData.circRadius);
+            if(radius > circData.circRadius){
+                radius = circData.circRadius;
+            }
+            circData.boardCircles[notes[i].pos].drawCircleRad(radius);
+        }
+    }
+    pop();
+}
+
 function updateBoard(mousePos){
-    calcCurrIndicies(calcTime());
+    let time = calcTime();
+    calcCurrIndicies(time);
     drawBoard(mousePos);
+    drawHitCircles(time);
 }
 
 /*==========[GAME FUNCTIONS]==========*/
@@ -70,6 +90,7 @@ function circDataSetup(){
     circData.numHits = 0;
     circData.level.firstIdx = 0;
     circData.level.lastIdx = 0;
+    circData.level.currIdx = 0;
 }
 
 function timeSetup(){
@@ -79,10 +100,7 @@ function timeSetup(){
 
 function calcTime(){
     let newTime = (new Date()).getTime();
-    let timeSinceStart = newTime - startUpTime; 
-    //console.log("Since last: " + (newTime - oldTime));
-    //console.log("Since start: " + timeSinceStart);
-    //oldTime = newTime;
+    let timeSinceStart = newTime - startUpTime;
     return timeSinceStart/1000;//Convert to seconds
 }
 
@@ -90,7 +108,7 @@ function startOrStopSong(button){
     if(beatmaps[beatmaps.currMap].audio.isPlaying()){
         beatmaps[beatmaps.currMap].audio.stop();
         noLoop();
-        button.innerHTML = "Start";
+        button.innerHTML = "Restart";
     }
     else{
         beatmaps[beatmaps.currMap].audio.play();
@@ -130,7 +148,6 @@ function calcCurrIndicies(time){
     //Update values in circData
     circData.level.firstIdx = low;
     circData.level.lastIdx = high;
-    //console.log("[New] First idx: " + low + " Last idx: " + high);
 }
 
 function determineType(time, pos){
@@ -140,27 +157,35 @@ function determineType(time, pos){
         let startTime = currNote.startTime;
         let hitTime = currNote.hitTime;
         let endTime = currNote.endTime;
+        if(time < startTime){
+            currHit.grade = "null";
+            if(time > endTime){
+                circData.level.currIdx++;
+            }
+        }
         //Perfect timing window: +- 0 <= x < 0.3 sec
-        if(time < hitTime + beatmaps[beatmaps.currMap].perfectTime && 
+        else if(time < hitTime + beatmaps[beatmaps.currMap].perfectTime && 
             time > hitTime - beatmaps[beatmaps.currMap].perfectTime){
             currHit.grade = "perfect";
+            circData.level.currIdx++;
         }
         //Great timing window: +- 0.3 <= x < 0.6 sec
         else if(time < hitTime + beatmaps[beatmaps.currMap].greatTime && 
             time > hitTime - beatmaps[beatmaps.currMap].greatTime){
             currHit.grade = "great";
+            circData.level.currIdx++;
         }
         //Good timing window: +- 0.6 <= x < 0.9 sec
         else if(time < hitTime + beatmaps[beatmaps.currMap].goodTime && 
             time > hitTime - beatmaps[beatmaps.currMap].goodTime){
             currHit.grade = "good";
+            circData.level.currIdx++;
         }
         else{
             currHit.grade = "miss";
+            circData.level.currIdx++;
         }
-        circData.currIdx++;
     }
-    circData.level.hitData.push(currHit);
     return currHit.grade;
 }
 
@@ -169,5 +194,5 @@ function registerHit(time, pos){
     if(!(hitType == "null")){
         updateStats(hitType);
     }
-    console.log("Time: " + time + ", Pos: " + pos, "Type: " + hitType);
+    //console.log("Time: " + time + ", Pos: " + pos, "Type: " + hitType);
 }
