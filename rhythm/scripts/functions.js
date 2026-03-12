@@ -6,11 +6,15 @@ function canvasSetup(){
 
     let button = document.getElementById("startBtn");
     button.onclick = function(){
-        circDataSetup();
         statsSetup();
-        startOrStopSong(button);
+        resetCircData();
+        beatmapSetup();
         timeSetup();
+        startOrStopSong(button);
     }
+    domVarsSetup();
+    beatmapSetup();
+    circleSetup();
 }
 
 function updateStats(grade){
@@ -60,18 +64,17 @@ function drawBoard(pos){
 }
 
 function drawHitCircles(time){
-    let notes = beatmaps[beatmaps.currMap].notes;
     push();
     fill(220);
     opacity(0.5);
-    for(let i = circData.level.firstIdx; i <= circData.level.lastIdx; i++){
-        if(i >= circData.level.currIdx){
-            let note = beatmaps[beatmaps.currMap].notes[i];
+    for(let i = circData.mapData.firstIdx; i <= circData.mapData.lastIdx; i++){
+        if(i >= circData.mapData.currIdx){
+            let note = circData.currCircles[i];
             let radius = map(time, note.startTime, note.hitTime, 0, circData.circRadius);
             if(radius > circData.circRadius){
                 radius = circData.circRadius;
             }
-            circData.boardCircles[notes[i].pos].drawCircleRad(radius);
+            circData.boardCircles[note.pos].drawCircleRad(radius);
         }
     }
     pop();
@@ -85,17 +88,33 @@ function updateBoard(mousePos){
 }
 
 /*==========[GAME FUNCTIONS]==========*/
-function circDataSetup(){
+function resetCircData(){
     circData.currCircles = [];
     circData.numHits = 0;
-    circData.level.firstIdx = 0;
-    circData.level.lastIdx = 0;
-    circData.level.currIdx = 0;
+    circData.mapData.firstIdx = 0;
+    circData.mapData.lastIdx = 0;
+    circData.mapData.currIdx = 0;
 }
 
 function timeSetup(){
     startUpTime = (new Date()).getTime();
     oldTime = startUpTime;
+}
+
+function beatmapSetup(){
+    circData.qNoteLen = 0.25/beatmaps[beatmaps.currMap].bpm*60;//length of quarter note
+    let notes = beatmaps[beatmaps.currMap].notes;
+    let calcHitTime;
+    for(let i = 0; i < notes.length; i++){
+        calcHitTime = Math.round(notes[i].hitTime * circData.qNoteLen * 4000)/1000;
+        circData.currCircles.push({
+            startTime: Math.round((calcHitTime - circData.qNoteLen * 8/circData.speed)*1000)/1000,
+            hitTime: calcHitTime,
+            endTime: Math.round((calcHitTime + circData.qNoteLen * 8/circData.speed)*1000)/1000,
+            pos: notes[i].pos 
+        });
+    }
+    console.log(circData.currCircles);
 }
 
 function calcTime(){
@@ -134,9 +153,9 @@ function calcHitPos(xMousePos, yMousePos){
 }
 
 function calcCurrIndicies(time){
-    let low = circData.level.firstIdx;
-    let high = circData.level.lastIdx;
-    let notes = beatmaps[beatmaps.currMap].notes;
+    let low = circData.mapData.firstIdx;
+    let high = circData.mapData.lastIdx;
+    let notes = circData.currCircles;
     //Incrememnt old notes out
     while(low < notes.length && notes[low].endTime < time){
         low++;
@@ -146,44 +165,44 @@ function calcCurrIndicies(time){
         high++;
     }
     //Update values in circData
-    circData.level.firstIdx = low;
-    circData.level.lastIdx = high;
+    circData.mapData.firstIdx = low;
+    circData.mapData.lastIdx = high;
 }
 
 function determineType(time, pos){
     let currHit = {time: time, grade: "null"};
-    if(pos != -1 && circData.level.currIdx < beatmaps[beatmaps.currMap].notes.length){
-        let currNote = beatmaps[beatmaps.currMap].notes[circData.level.currIdx];
+    if(pos != -1 && circData.mapData.currIdx < circData.currCircles.length){
+        let currNote = circData.currCircles[circData.mapData.currIdx];
         let startTime = currNote.startTime;
         let hitTime = currNote.hitTime;
         let endTime = currNote.endTime;
         if(time < startTime){
             currHit.grade = "null";
             if(time > endTime){
-                circData.level.currIdx++;
+                circData.mapData.currIdx++;
             }
         }
         //Perfect timing window: +- 0 <= x < 0.3 sec
         else if(time < hitTime + beatmaps[beatmaps.currMap].perfectTime && 
             time > hitTime - beatmaps[beatmaps.currMap].perfectTime){
             currHit.grade = "perfect";
-            circData.level.currIdx++;
+            circData.mapData.currIdx++;
         }
         //Great timing window: +- 0.3 <= x < 0.6 sec
         else if(time < hitTime + beatmaps[beatmaps.currMap].greatTime && 
             time > hitTime - beatmaps[beatmaps.currMap].greatTime){
             currHit.grade = "great";
-            circData.level.currIdx++;
+            circData.mapData.currIdx++;
         }
         //Good timing window: +- 0.6 <= x < 0.9 sec
         else if(time < hitTime + beatmaps[beatmaps.currMap].goodTime && 
             time > hitTime - beatmaps[beatmaps.currMap].goodTime){
             currHit.grade = "good";
-            circData.level.currIdx++;
+            circData.mapData.currIdx++;
         }
         else{
             currHit.grade = "miss";
-            circData.level.currIdx++;
+            circData.mapData.currIdx++;
         }
     }
     return currHit.grade;
@@ -191,8 +210,8 @@ function determineType(time, pos){
 
 function registerHit(time, pos){
     let hitType = determineType(time, pos);
-    if(!(hitType == "null")){
+    if(hitType != "null"){
         updateStats(hitType);
     }
-    //console.log("Time: " + time + ", Pos: " + pos, "Type: " + hitType);
+    console.log("Time: " + time + ", Pos: " + pos, "Type: " + hitType);
 }
