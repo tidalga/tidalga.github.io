@@ -1,0 +1,30 @@
+html, body{
+    margin: 0;
+    padding: 0;
+}
+canvas{
+    display: block;
+}
+stat{
+    font-size: 200%;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+}
+
+#startBtn{
+    font-size: 400%;
+    width: auto;
+}
+#mainDiv{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+#songDiv{
+    display: grid;
+}
+#statsDiv{
+    display: grid;
+    background-color: cadetblue;
+    justify-content: center;
+    align-items: center;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+}
